@@ -140,6 +140,7 @@ class TelecomUserEngagement:
     
     # def plot_top_applications(self):
         application_traffic = self.aggregate_traffic_per_application()
+
         # Aggregate traffic data for each application
         total_traffic_per_app = application_traffic.groupby('Application').agg({
             'Total Traffic Social Media (Bytes)': 'sum',
@@ -161,37 +162,50 @@ class TelecomUserEngagement:
         for app in top_3_apps:
             plt.figure(figsize=(12, 6))
             app_data = top_3_data[top_3_data['Application'] == app]
-            sns.barplot(x='MSISDN/Number', y=f'Total Traffic {app} (Bytes)', data=app_data, ci=None)
-            plt.xticks(rotation=90)
-            plt.title(f'Total Traffic for {app}')
-            plt.xlabel('User (MSISDN/Number)')
-            plt.ylabel('Total Traffic (Bytes)')
-            plt.tight_layout()
-            plt.show()
-
-    def plot_top_applications(self):
-        top_3_data = self.top_users_per_application(top_n=10)
-        
-        # Print the column names to confirm
-        print(top_3_data.columns)
-        
-        # Plot the top 3 most used applications
-        top_apps = top_3_data['Application'].value_counts().head(3).index
-        for app in top_apps:
-            plt.figure(figsize=(12, 6))
             
-            # Make sure to correctly reference the columns
-            app_col = f'Total Traffic {app} (Bytes)'
+            # Ensure we reference the correct column name
+            column_name = f'Total Traffic {app} (Bytes)'
+            print(f"Checking column: {column_name}")
             
-            if app_col in top_3_data.columns:
-                app_data = top_3_data[top_3_data['Application'] == app]
-                
-                # Plot the data
-                plt.bar(app_data['MSISDN/Number'], app_data[app_col], color='skyblue')
-                plt.xlabel('MSISDN/Number')
-                plt.ylabel(f'Total Traffic {app} (Bytes)')
-                plt.title(f'Total Traffic for {app}')
+            if column_name in app_data.columns:
+                sns.barplot(x='MSISDN/Number', y=column_name, data=app_data, ci=None)
                 plt.xticks(rotation=90)
+                plt.title(f'Total Traffic for {app}')
+                plt.xlabel('User (MSISDN/Number)')
+                plt.ylabel('Total Traffic (Bytes)')
+                plt.tight_layout()
                 plt.show()
             else:
-                print(f"Column '{app_col}' does not exist in the DataFrame.")
+                print(f"Column '{column_name}' not found in data")
+
+
+    def plot_top_applications(self):
+        # Summing up the total traffic for each application
+        application_traffic = {
+            'Social Media': self.df['Social Media DL (Bytes)'].sum() + self.df['Social Media UL (Bytes)'].sum(),
+            'Google': self.df['Google DL (Bytes)'].sum() + self.df['Google UL (Bytes)'].sum(),
+            'Email': self.df['Email DL (Bytes)'].sum() + self.df['Email UL (Bytes)'].sum(),
+            'Youtube': self.df['Youtube DL (Bytes)'].sum() + self.df['Youtube UL (Bytes)'].sum(),
+            'Netflix': self.df['Netflix DL (Bytes)'].sum() + self.df['Netflix UL (Bytes)'].sum(),
+            'Gaming': self.df['Gaming DL (Bytes)'].sum() + self.df['Gaming UL (Bytes)'].sum(),
+            'Other': self.df['Other DL (Bytes)'].sum() + self.df['Other UL (Bytes)'].sum()
+        }
+
+        # Convert the dictionary to a Series for easier manipulation
+        application_traffic_series = pd.Series(application_traffic)
+
+        # Find the top 3 applications with the highest total traffic
+        top_3_applications = application_traffic_series.nlargest(3)
+        
+        # Set up the matplotlib figure
+        plt.figure(figsize=(12, 8))
+
+        # Plot total traffic for each of the top 3 applications
+        top_3_applications.plot(kind='bar', color=['blue', 'orange', 'green'])
+        
+        plt.title('Top 3 Applications by Total Traffic')
+        plt.xlabel('Application')
+        plt.ylabel('Total Traffic (Bytes)')
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.show()
