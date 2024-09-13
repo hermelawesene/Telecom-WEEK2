@@ -1,6 +1,7 @@
-psycopg2
+psycopg2-binary
 python-dotenv
 pandas
-psycopg2-binary
 sqlalchemy
 matplotlib
+mlflow
+scikit-learn

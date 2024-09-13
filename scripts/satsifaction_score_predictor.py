@@ -1,8 +1,14 @@
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
+import mlflow
+import mlflow.sklearn
 import sys
 import os
+
+# Silence warnings and set environment variables
+os.environ["GIT_PYTHON_REFRESH"] = "quiet"
+os.environ["LOKY_MAX_CPU_COUNT"] = "4"  # Adjust to your CPU count
 sys.path.append(os.path.abspath('../scripts'))
 
 # Get the current directory
@@ -94,5 +100,38 @@ class SatisfactionScorePredictor:
         
         # Evaluate the model
         self.evaluate_model(X_test, y_test)
+
+    def run(self):
+        # Start an MLFlow run
+        with mlflow.start_run():
+            # Prepare the data and split into training and testing sets
+            X_train, X_test, y_train, y_test = self.prepare_data()
+
+            # Log parameters
+            mlflow.log_param("model_type", "Linear Regression")
+            mlflow.log_param("test_size", 0.2)
+            mlflow.log_param("random_state", 42)
+
+            # Train the model
+            self.train_model(X_train, y_train)
+
+            # Log model
+            mlflow.sklearn.log_model(self.model, "model")
+
+            # Evaluate the model
+            y_pred = self.model.predict(X_test)
+            mse = mean_squared_error(y_test, y_pred)
+            r2 = r2_score(y_test, y_pred)
+
+            # Log metrics
+            mlflow.log_metric("mse", mse)
+            mlflow.log_metric("r2", r2)
+
+            print(f"Mean Squared Error: {mse}")
+            print(f"R-Squared: {r2}")
+
+            # Save artifacts like the dataset or the final DataFrame
+            self.df.to_csv("data.csv", index=False)
+            mlflow.log_artifact("data.csv")
 
 
