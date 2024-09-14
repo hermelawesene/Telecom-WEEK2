@@ -4,3 +4,5 @@ pandas
 psycopg2-binary
 sqlalchemy
 matplotlib
+scikit-learn
+seaborn
