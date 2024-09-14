@@ -46,4 +46,4 @@ This repository contains code and scripts for analyzing telecom data, focusing o
 ### Clone this repository:
 
 ```bash
-git clone https://github.com/yourusername/telecom-data-analysis.git
+git clone https://github.com/hermelawesene/telecom-data-analysis.git
