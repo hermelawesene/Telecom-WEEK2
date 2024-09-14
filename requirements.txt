@@ -5,3 +5,4 @@ sqlalchemy
 matplotlib
 mlflow
 scikit-learn
+seaborn
