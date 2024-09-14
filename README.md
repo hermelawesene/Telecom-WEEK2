@@ -49,14 +49,14 @@ This repository contains code and scripts for analyzing telecom data, focusing o
 git clone https://github.com/hermelawesene/telecom-data-analysis.git
 ```
 
-##Install the required Python packages using requirements.txt:
+## Install the required Python packages using requirements.txt:
 ```bash
 pip install -r requirements.txt
 ```
 
-##Requirements
--**Python 3.x: For running the analysis scripts.
--**Pandas: For data manipulation and analysis.
--**Matplotlib: For data visualization.
--**SQLAlchemy: For database interactions
--**MLFlow: For tracking the experiments and model versions.
+## Requirements
+- **Python 3.x: For running the analysis scripts.
+- **Pandas: For data manipulation and analysis.
+- **Matplotlib: For data visualization.
+- **SQLAlchemy: For database interactions
+- **MLFlow: For tracking the experiments and model versions.
